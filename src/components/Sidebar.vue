@@ -1,26 +1,26 @@
 <template>
-  <aside class="sidebar">
-    <div class="logo-menu">
-      <img class="logo" src="../assets/img/RealHastaLaMuerte.png" alt="">
-      <i class='bx bx-menu menu-btn' @click="toggleMenu"></i>
+  <aside class="w-64 bg-white shadow-md">
+    <div class="p-4 flex items-center justify-between">
+      <img class="h-12" src="../assets/img/RealHastaLaMuerte.png" alt="">
+      <i class='bx bx-menu text-2xl cursor-pointer' @click="toggleMenu"></i>
     </div>
-    <ul class="lista active">
-      <li class="lista-item">
-        <router-link to="/personas">
-          <i class='bx bx-user-plus'></i>
-          <span class="nombre-link" style="--i:1;">Personas</span>
+    <ul class="mt-6">
+      <li class="mb-2">
+        <router-link to="/personas" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded">
+          <i class='bx bx-user-plus mr-2'></i>
+          <span>Personas</span>
         </router-link>
       </li>
-      <li class="lista-item">
-        <router-link to="/proyectos">
-          <i class='bx bx-folder-plus'></i>
-          <span class="nombre-link" style="--i:2;">Proyectos</span>
+      <li class="mb-2">
+        <router-link to="/proyectos" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded">
+          <i class='bx bx-folder-plus mr-2'></i>
+          <span>Proyectos</span>
         </router-link>
       </li>
-      <li class="lista-item">
-        <router-link to="/asociar">
-          <i class='bx bx-add-to-queue'></i>
-          <span class="nombre-link" style="--i:3;">Asociar Proyectos</span>
+      <li class="mb-2">
+        <router-link to="/asociar" class="flex items-center p-2 text-gray-700 hover:bg-gray-200 rounded">
+          <i class='bx bx-add-to-queue mr-2'></i>
+          <span>Asociar Proyectos</span>
         </router-link>
       </li>
     </ul>
@@ -39,13 +39,6 @@ export default {
 
 <style scoped>
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 80px;
-  height: 100%;
-  background: transparent;
-  backdrop-filter: blur(40px);
-  border-right: 2px solid rgba(255, 255, 255, .2);
+  transition: width 0.5s;
 }
 </style>

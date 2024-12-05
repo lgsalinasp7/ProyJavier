@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" class="min-h-screen bg-gray-100 flex">
     <Sidebar @show-form="showForm" />
-    <main class="main-content" id="main-content">
+    <main class="flex-1 p-6">
       <router-view />
     </main>
   </div>
