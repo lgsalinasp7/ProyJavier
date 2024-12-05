@@ -37,16 +37,29 @@
           </div>
           <div>
             <button @click="editarProyecto(index)" class="bg-yellow-500 text-white p-1 rounded mr-2">Editar</button>
-            <button @click="eliminarProyecto(index)" class="bg-red-500 text-white p-1 rounded">Eliminar</button>
+            <button @click="confirmarEliminarProyecto(index)" class="bg-red-500 text-white p-1 rounded">Eliminar</button>
           </div>
         </li>
       </ul>
     </div>
+    <Modal
+      v-if="showModal"
+      :title="modalTitle"
+      :message="modalMessage"
+      :visible="showModal"
+      @close="showModal = false"
+      @confirm="eliminarProyecto(confirmIndex)"
+    />
   </section>
 </template>
 
 <script>
+import Modal from './Modal.vue';
+
 export default {
+  components: {
+    Modal
+  },
   data() {
     return {
       proyecto: {
@@ -57,7 +70,12 @@ export default {
         presupuesto: ''
       },
       proyectos: JSON.parse(localStorage.getItem('proyectos')) || [],
-      editProjectIndex: -1
+      asociaciones: JSON.parse(localStorage.getItem('asociaciones')) || [],
+      editProjectIndex: -1,
+      showModal: false,
+      modalTitle: '',
+      modalMessage: '',
+      confirmIndex: -1
     }
   },
   methods: {
@@ -75,9 +93,22 @@ export default {
       this.proyecto = { ...this.proyectos[index] };
       this.editProjectIndex = index;
     },
+    confirmarEliminarProyecto(index) {
+      const proyecto = this.proyectos[index];
+      const tieneAsociaciones = this.asociaciones.some(asociacion => asociacion.proyecto.nombreProyecto === proyecto.nombreProyecto);
+      if (tieneAsociaciones) {
+        this.modalTitle = 'Eliminar Proyecto';
+        this.modalMessage = 'Debe quitar la asociación antes de eliminar este proyecto.';
+        this.showModal = true;
+        this.confirmIndex = index;
+      } else {
+        this.eliminarProyecto(index);
+      }
+    },
     eliminarProyecto(index) {
       this.proyectos.splice(index, 1);
       this.actualizarLocalStorage();
+      this.showModal = false;
     },
     resetForm() {
       this.proyecto = {

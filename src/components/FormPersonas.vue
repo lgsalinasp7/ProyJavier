@@ -45,16 +45,29 @@
           {{ persona.nombres }} {{ persona.apellidos }} - {{ persona.tipoIdentificacion }}: {{ persona.identificacion }}
           <div>
             <button @click="editarPersona(index)" class="bg-yellow-500 text-white p-1 rounded mr-2">Editar</button>
-            <button @click="eliminarPersona(index)" class="bg-red-500 text-white p-1 rounded">Eliminar</button>
+            <button @click="confirmarEliminarPersona(index)" class="bg-red-500 text-white p-1 rounded">Eliminar</button>
           </div>
         </li>
       </ul>
     </div>
+    <Modal
+      v-if="showModal"
+      :title="modalTitle"
+      :message="modalMessage"
+      :visible="showModal"
+      @close="showModal = false"
+      @confirm="eliminarPersona(confirmIndex)"
+    />
   </section>
 </template>
 
 <script>
+import Modal from './Modal.vue';
+
 export default {
+  components: {
+    Modal
+  },
   data() {
     return {
       persona: {
@@ -67,7 +80,12 @@ export default {
         direccion: ''
       },
       personas: JSON.parse(localStorage.getItem('personas')) || [],
-      editIndex: -1
+      asociaciones: JSON.parse(localStorage.getItem('asociaciones')) || [],
+      editIndex: -1,
+      showModal: false,
+      modalTitle: '',
+      modalMessage: '',
+      confirmIndex: -1
     }
   },
   methods: {
@@ -85,9 +103,22 @@ export default {
       this.persona = { ...this.personas[index] };
       this.editIndex = index;
     },
+    confirmarEliminarPersona(index) {
+      const persona = this.personas[index];
+      const tieneAsociaciones = this.asociaciones.some(asociacion => asociacion.persona.identificacion === persona.identificacion);
+      if (tieneAsociaciones) {
+        this.modalTitle = 'Eliminar Persona';
+        this.modalMessage = 'Debe quitar la asociación antes de eliminar esta persona.';
+        this.showModal = true;
+        this.confirmIndex = index;
+      } else {
+        this.eliminarPersona(index);
+      }
+    },
     eliminarPersona(index) {
       this.personas.splice(index, 1);
       this.actualizarLocalStorage();
+      this.showModal = false;
     },
     resetForm() {
       this.persona = {
